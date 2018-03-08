@@ -1,0 +1,15 @@
+-standalone: target/index.xml
+
+src: \
+	src/main/java,\
+	src/main/resources
+bin: \
+	target/classes
+
+Private-Package: \
+	net.bbmsoft.iocfx.nonosgi.example,\
+	net.bbmsoft.iocfx.osgi.example
+
+Import-Package: \
+	!*.impl.*,\
+	*
