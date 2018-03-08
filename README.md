@@ -10,10 +10,7 @@ JavaFX is monolithic. It assumes that there is exactly one application running i
 
 In an OSGi environment, the number of applications sharing the same JVM is potentially arbitrary and so is the number of bundles that want to bring their own UI. If every bundle, that wants to show a UI runs Application.launch(), chaos ensues.
 
-There are basically two ways to approach this issue:
-
-1. Allow plugins to create their own Application using an alternative to Application.launch() that can be called more than once per JVM. This is what the SubApplicationFX project does.
-2. Give plugins a way to publish their desire to be assigned a UI and let the framework provide them one when it's ready (Inversion of Control). This is what IoCFX does.
+IoCFX goes the other way round. It leaves managing the JavaFX Platform to the framework and just publishes its desire to be assigned a UI by the framework once it's ready.
 
 ## Why use it?
 
