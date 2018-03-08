@@ -17,9 +17,9 @@ There are basically two ways to approach this issue:
 
 ## Why use it?
 
-IoCFX was designed with maximum simplicity in mind. If you already have an OSGi framework running and want it to have a UI, let your UI bundle provide a StageUser instance and make sure that the net.bbmsoft.iocfx bundle is installed. Voila, your UI bundle will be provided with a Stage instance as soon as it gets activated. By letting your StageUser also implement the StageConfig interface, you can customize the StageStyle and the behavior of your bundle when the stage is closed. That's it.
+IoCFX was designed with maximum simplicity in mind. If you already have an OSGi framework running and want it to have a UI, let your UI bundle provide a StageConsumer instance and make sure that the net.bbmsoft.iocfx bundle is installed. Voilà, your UI bundle will be provided with a Stage instance as soon as it gets activated. By letting your StageConsumer also implement the StageConfig interface, you can customize the StageStyle and the behavior of your bundle when the stage is closed. That's it.
 
-If you don't have an OSGi framework running, your UI plugin can register itself to a StageUserRegistry singleton, which will have the same result. This of course creates an additional compile time dependency that you can avoid when working with OSGi.
+If you don't have an OSGi framework running, your UI plugin can register itself to a StageConsumerRegistry singleton, which will have the same result. This of course creates an additional compile time dependency that you can avoid when working with OSGi.
 
 ## Why not use it?
 
