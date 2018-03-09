@@ -25,3 +25,34 @@ If you don't have an OSGi framework running, your UI plugin can register itself 
 IoCFX is designed to be extremely simple. There are other projects out there that do quite similar things but offer more configurability or extra functionality. Not doing so is a deliberate choice in IoCFX. The goal here is to not add anything to your dependency tree that you don't actually use.
 However if you do plan to use the additional flexibility other projects offer, they may of course be a better choice for you.
 
+## How to build?
+
+SSH:
+```
+git clone git@github.com:bbmsoft/iocfx.git
+cd iocfx
+mvn clean install
+```
+
+HTTPS:
+```
+git clone https://github.com/bbmsoft/iocfx.git
+cd iocfx
+mvn clean install
+```
+
+This obviously requires maven.
+
+## How to run?
+
+IoCFX is not executable by itself. However the repository includes two small executable examples.
+
+To run them, follow these simple steps:
+
+ - make sure you have eclipse + Bndtools 3.4.0+ installed
+ - follow the 'How to build?' instructions
+ - import iocfx-example into eclipse as a maven project
+ - open iocfx-example.bndrun and click 'Run OSGi'
+ - alternatively, if you want to try the non-OSGi version, find NonOsgiUI.java in the package explorer and run it as a plain old Java Application (Right click > Run As > Java Application)
+
+If you see two windows saying "Hello IoCFX!" popping up (one in case of NonOsgiUI.java), everything went well.
