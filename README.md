@@ -49,7 +49,7 @@ IoCFX is not executable by itself. However the repository includes two small exe
 
 To run them, follow these simple steps:
 
- - make sure you have eclipse + Bndtools 3.4.0+ installed
+ - make sure you have eclipse with Bndtools 3.4.0+ installed
  - follow the 'How to build?' instructions
  - import iocfx-example into eclipse as a maven project
  - open iocfx-example.bndrun and click 'Run OSGi'
