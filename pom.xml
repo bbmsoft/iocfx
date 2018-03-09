@@ -123,4 +123,23 @@
 		<module>iocfx</module>
 		<module>iocfx-example</module>
 	</modules>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>bbmsoft-nexus-snapshots</id>
+			<url>https://nexus.bbmsoft.net/repository/maven-snapshots/</url>
+		</snapshotRepository>
+		<repository>
+			<id>bbmsoft-nexus-releases</id>
+			<url>https://nexus.bbmsoft.net/repository/maven-releases/</url>
+		</repository>
+	</distributionManagement>
+
+	<repositories>
+		<repository>
+			<id>nexus.bbmsoft.net</id>
+			<url>https://nexus.bbmsoft.net/repository/maven-public/</url>
+		</repository>
+	</repositories>
+
 </project>
