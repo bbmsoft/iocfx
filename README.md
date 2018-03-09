@@ -1,5 +1,7 @@
 # IoCFX
 
+[![Build Status](https://travis-ci.org/bbmsoft/iocfx.svg?branch=develop)](https://travis-ci.org/bbmsoft/iocfx)
+
 ## What is it?
 
 IoCFX is a minimal Inversion of Control framework designed to improve the usability of JavaFX when running it from within OSGi or a similar framework/container/plugin host.
