@@ -44,7 +44,7 @@
 				<configuration>
 					<includeJar>true</includeJar>
 					<includeGzip>false</includeGzip>
-					<localURLs>ALLOWED</localURLs>
+					<localURLs>REQUIRED</localURLs>
 					<attach>false</attach>
 				</configuration>
 				<executions>
