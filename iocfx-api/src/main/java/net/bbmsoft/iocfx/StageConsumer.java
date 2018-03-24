@@ -6,6 +6,13 @@ import org.osgi.annotation.versioning.ConsumerType;
 
 import javafx.stage.Stage;
 
+/**
+ * Components published as a StageConsumer will be provided with a {@link Stage}
+ * as soon as the JavaFX platform is ready.
+ * 
+ * @author Michael Bachmann
+ *
+ */
 @ConsumerType
 public interface StageConsumer extends Consumer<Stage> {
 

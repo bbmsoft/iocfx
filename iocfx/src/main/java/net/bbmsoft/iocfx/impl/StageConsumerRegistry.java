@@ -6,10 +6,6 @@ import java.util.Objects;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.BundleException;
-import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
@@ -18,7 +14,6 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
 import net.bbmsoft.iocfx.ExitPolicy;
 import net.bbmsoft.iocfx.StageConfig;
 import net.bbmsoft.iocfx.StageConsumer;
@@ -113,48 +108,19 @@ public class StageConsumerRegistry {
 	}
 
 	private void stopBundleOnStageExit(StageConsumer stageUser, Stage stage) {
-
-		Bundle bundle = FrameworkUtil.getBundle(stageUser.getClass());
-
-		if (bundle == null) {
-			// uh oh, looks like we are not in an OSGi environment
-			// shutdown policies are not supported here and need to be implemented using a
-			// WindowEvent handler on the provided stage
-			return;
+		try {
+			ShutdownPolicyHandler.stopBundleOnStageExit(stageUser, stage);
+		} catch (ClassNotFoundException | NoClassDefFoundError e) {
+			// this will happen when OSGi is not on the classpath
 		}
-
-		stage.addEventFilter(WindowEvent.WINDOW_HIDING, e -> {
-			try {
-				bundle.stop();
-			} catch (BundleException e1) {
-				System.err.println("Could not stop the stage user's bundle.");
-				e1.printStackTrace();
-			}
-		});
 	}
 
 	private void shutdownOnStageExit(StageConsumer stageUser, Stage stage) {
-
-		Bundle bundle = FrameworkUtil.getBundle(stageUser.getClass());
-
-		if (bundle == null) {
-			// uh oh, looks like we are not in an OSGi environment
-			// shutdown policies are not supported here and need to be implemented using a
-			// WindowEvent handler on the provided stage
-			return;
+		try {
+			ShutdownPolicyHandler.shutdownOnStageExit(stageUser, stage);
+		} catch (ClassNotFoundException | NoClassDefFoundError e) {
+			// this will happen when OSGi is not on the classpath
 		}
-
-		BundleContext bundleContext = bundle.getBundleContext();
-		Bundle systemBundle = bundleContext.getBundle(0);
-
-		stage.addEventFilter(WindowEvent.WINDOW_HIDING, e -> {
-			try {
-				systemBundle.stop();
-			} catch (BundleException e1) {
-				System.err.println("Could not stop the system bundle.");
-				e1.printStackTrace();
-			}
-		});
 	}
 
 	private void removeStage(StageConsumer stageUser) {

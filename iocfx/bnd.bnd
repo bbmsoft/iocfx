@@ -1,2 +1,6 @@
-Private-Package: net.bbmsoft.iocfx.impl
-Export-Package: net.bbmsoft.iocfx
+Private-Package: \
+	net.bbmsoft.iocfx.impl,\
+	net.bbmsoft.iocfx.platform.impl
+Export-Package: \
+	net.bbmsoft.iocfx,\
+	net.bbmsoft.iocfx.platform

@@ -8,13 +8,10 @@
 	osgi.identity;filter:='(osgi.identity=iocfx)',\
 	osgi.identity;filter:='(osgi.identity=iocfx-example)'
 	
--runbundles: \
-	org.apache.felix.scr;version='[2.0.14,2.0.15)',\
-	iocfx;version='[1.0.0,1.0.1)',\
-	iocfx-example;version='[1.0.0,1.0.1)'
 	
 -runsystempackages: \
 	javafx.application,\
+	javafx.beans.property,\
 	javafx.event,\
 	javafx.fxml,\
 	javafx.geometry,\
@@ -23,3 +20,7 @@
 	javafx.scene.control,\
 	javafx.scene.layout,\
 	javafx.scene.text
+-runbundles: \
+	org.apache.felix.scr;version='[2.0.14,2.0.15)',\
+	iocfx;version='[1.1.0,1.1.1)',\
+	iocfx-example;version='[1.1.0,1.1.1)'

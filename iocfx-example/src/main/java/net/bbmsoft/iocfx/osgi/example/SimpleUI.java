@@ -17,7 +17,7 @@ public class SimpleUI implements StageConsumer {
 		
 		Label label = new Label("Hello IoCFX!\nClose this stage to shut down the application.");
 		label.setTextAlignment(TextAlignment.CENTER);
-		label.setPrefSize(320, 240);
+		label.setPrefSize(640, 480);
 		label.setAlignment(Pos.CENTER);
 		stage.setScene(new Scene(label));
 		stage.show();
