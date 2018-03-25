@@ -11,7 +11,7 @@ import net.bbmsoft.iocfx.platform.impl.PlatformWrapper;
 public class RootApplication extends Application {
 
 	@Override
-	public synchronized void start(Stage primaryStage) throws Exception {
+	public synchronized void start(Stage primaryStage) {
 		Platform.setImplicitExit(false);
 		JavaFXFrameworkLauncher.frameworkLauncher.setRootApplicationInstance(this);
 

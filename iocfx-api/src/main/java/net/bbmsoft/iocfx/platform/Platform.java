@@ -126,6 +126,12 @@ public interface Platform {
 	 *             if the FX runtime has not been initialized
 	 */
 	public void runLater(Runnable runnable);
+	
+	public void runOnFxApplicationThread(Runnable runnable);
+	
+	public void runAndWait(Runnable runnable) throws InterruptedException;
+	
+	public void assertFxApplicationThread();
 
 	/**
 	 * Sets the implicitExit attribute to the specified value. If this attribute is

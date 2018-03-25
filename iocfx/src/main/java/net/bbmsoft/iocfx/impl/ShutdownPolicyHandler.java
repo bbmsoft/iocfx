@@ -33,8 +33,10 @@ public class ShutdownPolicyHandler {
 			return;
 		}
 
-		stage.addEventHandler(WindowEvent.WINDOW_HIDING, e -> {
+		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> {
 			try {
+				e.consume();
+				stage.hide();
 				bundle.stop();
 			} catch (BundleException e1) {
 				System.err.println("Could not stop the stage user's bundle.");
@@ -69,8 +71,10 @@ public class ShutdownPolicyHandler {
 		BundleContext bundleContext = bundle.getBundleContext();
 		Bundle systemBundle = bundleContext.getBundle(0);
 
-		stage.addEventHandler(WindowEvent.WINDOW_HIDING, e -> {
+		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> {
 			try {
+				e.consume();
+				stage.hide();
 				systemBundle.stop();
 			} catch (BundleException e1) {
 				System.err.println("Could not stop the system bundle.");
