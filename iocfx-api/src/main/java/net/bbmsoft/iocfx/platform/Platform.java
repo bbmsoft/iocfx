@@ -108,7 +108,7 @@ public interface Platform {
 	 *
 	 * <p>
 	 * This method must not be called before the FX runtime has been initialized.
-	 * For standard JavaFX applications that extend {@see Application}, and use
+	 * For standard JavaFX applications that extend {@link Application}, and use
 	 * either the Java launcher or one of the launch methods in the Application
 	 * class to launch the application, the FX runtime is initialized by the
 	 * launcher before the Application class is loaded. For Swing applications that
