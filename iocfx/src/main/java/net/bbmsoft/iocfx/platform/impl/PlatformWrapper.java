@@ -98,10 +98,10 @@ public class PlatformWrapper implements net.bbmsoft.iocfx.platform.Platform {
 
 		switch (policy) {
 		case DO_NOTHING_ON_STAGE_EXIT:
-			ShutdownPolicyHandler.doNothingOnStageExit(bundleClass, stage);
+			ShutdownPolicyHandler.doNothingOnStageExit(stage);
 			break;
 		case SHUTDOWN_ON_STAGE_EXIT:
-			ShutdownPolicyHandler.shutdownOnStageExit(bundleClass, stage);
+			ShutdownPolicyHandler.shutdownOnStageExit(stage);
 			break;
 		case STOP_BUNDLE_ON_STAGE_EXIT:
 			ShutdownPolicyHandler.stopBundleOnStageExit(bundleClass, stage);

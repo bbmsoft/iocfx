@@ -1,5 +1,6 @@
 Export-Package: \
 	net.bbmsoft.iocfx,\
-	net.bbmsoft.iocfx.platform,\
-	net.bbmsoft.iocfx.fxml
+	net.bbmsoft.iocfx.fxml,\
+	net.bbmsoft.iocfx.platform
+
 Require-Capability: compile-only

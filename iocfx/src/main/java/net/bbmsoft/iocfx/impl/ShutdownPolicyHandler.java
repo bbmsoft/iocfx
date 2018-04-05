@@ -13,19 +13,19 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 public class ShutdownPolicyHandler {
-	
+
 	private static final Map<Stage, EventHandler<WindowEvent>> eventHandlers = new HashMap<>();
 
 	/**
 	 * Adds an event handler to the stage that will stop the bundle the stage was
-	 * created for when the stage is closed.
+	 * created for when the stage is closed and removes any existing event handlers
+	 * enforcing a different policy.
 	 * 
-	 * @param stageUser
-	 *            the {@link StageConsumer} the stage was created for
+	 * @param bundleClass
+	 *            a class from the bundle that needs to be stopped when the stage is
+	 *            closed
 	 * @param stage
 	 *            the stage
-	 * @throws ClassNotFoundException
-	 *             if OSGi is not on the classpath
 	 */
 	public static synchronized void stopBundleOnStageExit(Class<?> bundleClass, Stage stage) {
 
@@ -37,7 +37,7 @@ public class ShutdownPolicyHandler {
 			// WindowEvent handler on the provided stage
 			return;
 		}
-		
+
 		removeExistingHandler(stage);
 
 		EventHandler<WindowEvent> eventHandler = e -> {
@@ -50,34 +50,30 @@ public class ShutdownPolicyHandler {
 				e1.printStackTrace();
 			}
 		};
-		
+
 		eventHandlers.put(stage, eventHandler);
-		
+
 		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, eventHandler);
 	}
 
 	private static void removeExistingHandler(Stage stage) {
 		EventHandler<WindowEvent> oldHandler = eventHandlers.remove(stage);
-		if(oldHandler != null) {
+		if (oldHandler != null) {
 			stage.removeEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, oldHandler);
 		}
 	}
 
 	/**
 	 * Adds an event handler to the stage that will shut down the OSGi framework
-	 * when the stage is closed.
+	 * when the stage is closed and removes any existing event handlers enforcing a
+	 * different policy.
 	 * 
-	 * @param stageUser
-	 *            the {@link StageConsumer} the stage was created for
 	 * @param stage
 	 *            the stage
-	 * @throws ClassNotFoundException
-	 *             if OSGi is not on the classpath
 	 */
+	public static void shutdownOnStageExit(Stage stage) {
 
-	public static void shutdownOnStageExit(Class<?> bundleClass, Stage stage) {
-
-		Bundle bundle = FrameworkUtil.getBundle(bundleClass);
+		Bundle bundle = FrameworkUtil.getBundle(ShutdownPolicyHandler.class);
 
 		if (bundle == null) {
 			// uh oh, looks like we are not in an OSGi environment
@@ -88,7 +84,7 @@ public class ShutdownPolicyHandler {
 
 		BundleContext bundleContext = bundle.getBundleContext();
 		Bundle systemBundle = bundleContext.getBundle(0);
-		
+
 		removeExistingHandler(stage);
 
 		EventHandler<WindowEvent> eventHandler = e -> {
@@ -101,13 +97,19 @@ public class ShutdownPolicyHandler {
 				e1.printStackTrace();
 			}
 		};
-		
+
 		eventHandlers.put(stage, eventHandler);
-		
+
 		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, eventHandler);
 	}
 
-	public static void doNothingOnStageExit(Class<?> bundleClass, Stage stage) {
+	/**
+	 * Removes any existing event handlers enforcing a different policy.
+	 * 
+	 * @param stage
+	 *            the stage
+	 */
+	public static void doNothingOnStageExit(Stage stage) {
 		removeExistingHandler(stage);
 	}
 }

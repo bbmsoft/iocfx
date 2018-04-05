@@ -28,6 +28,10 @@ public class FxmlLoaderComponent {
 
 		this.platform.runLater(() -> load(controller, loader));
 	}
+	
+	public void removeController(Fxml controller) {
+		// does nothing, but bndtools complains if not there
+	}
 
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
 	public void addInitializable(Initializable init) {
@@ -38,6 +42,10 @@ public class FxmlLoaderComponent {
 		}
 
 		this.platform.runLater(() -> init.initialize(null, null));
+	}
+	
+	public void removeInitializable(Initializable init) {
+		// does nothing, but bndtools complains if not there
 	}
 
 	private void load(Fxml controller, FXMLLoader loader) {
