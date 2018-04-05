@@ -1,6 +1,8 @@
 Private-Package: \
 	net.bbmsoft.iocfx.impl,\
-	net.bbmsoft.iocfx.platform.impl
+	net.bbmsoft.iocfx.platform.impl,\
+	net.bbmsoft.iocfx.fxml.impl
 Export-Package: \
 	net.bbmsoft.iocfx,\
-	net.bbmsoft.iocfx.platform
+	net.bbmsoft.iocfx.platform,\
+	net.bbmsoft.iocfx.fxml

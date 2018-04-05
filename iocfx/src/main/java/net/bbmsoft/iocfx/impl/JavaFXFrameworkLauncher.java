@@ -3,7 +3,6 @@ package net.bbmsoft.iocfx.impl;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
-import org.osgi.service.component.annotations.Reference;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -16,7 +15,6 @@ public class JavaFXFrameworkLauncher {
 
 	private RootApplication rootApplication;
 	private Thread frameworkLauncherThread;
-	private StageConsumerRegistry stageUserRegistry;
 
 	@Activate
 	public synchronized void launch() {
@@ -44,18 +42,6 @@ public class JavaFXFrameworkLauncher {
 		if(shutdownPlatform) {
 			System.out.println("Shutting down JavaFX Platform...");
 			Platform.exit();
-		}
-	}
-
-	@Reference
-	public synchronized void setStageUserRegistry(StageConsumerRegistry stageUserRegistry) {
-		this.stageUserRegistry = stageUserRegistry;
-		notifyStageUserRegistry();
-	}
-
-	public synchronized void unsetStageUserRegistry(StageConsumerRegistry stageUserRegistry) {
-		if (this.stageUserRegistry == stageUserRegistry) {
-			this.stageUserRegistry = null;
 		}
 	}
 
@@ -94,14 +80,6 @@ public class JavaFXFrameworkLauncher {
 
 		System.out.println("JavaFX Platform successfully initialized.");
 
-		notifyStageUserRegistry();
-
-	}
-
-	private void notifyStageUserRegistry() {
-		if (this.stageUserRegistry != null && this.rootApplication != null) {
-			this.stageUserRegistry.platformInitialized();
-		}
 	}
 
 }

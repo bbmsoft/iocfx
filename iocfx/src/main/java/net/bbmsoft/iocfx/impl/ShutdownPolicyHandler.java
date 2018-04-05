@@ -1,15 +1,20 @@
 package net.bbmsoft.iocfx.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
 import org.osgi.framework.FrameworkUtil;
 
+import javafx.event.EventHandler;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import net.bbmsoft.iocfx.StageConsumer;
 
 public class ShutdownPolicyHandler {
+	
+	private static final Map<Stage, EventHandler<WindowEvent>> eventHandlers = new HashMap<>();
 
 	/**
 	 * Adds an event handler to the stage that will stop the bundle the stage was
@@ -22,9 +27,9 @@ public class ShutdownPolicyHandler {
 	 * @throws ClassNotFoundException
 	 *             if OSGi is not on the classpath
 	 */
-	public static void stopBundleOnStageExit(StageConsumer stageUser, Stage stage) throws ClassNotFoundException {
+	public static synchronized void stopBundleOnStageExit(Class<?> bundleClass, Stage stage) {
 
-		Bundle bundle = FrameworkUtil.getBundle(stageUser.getClass());
+		Bundle bundle = FrameworkUtil.getBundle(bundleClass);
 
 		if (bundle == null) {
 			// uh oh, looks like we are not in an OSGi environment
@@ -32,8 +37,10 @@ public class ShutdownPolicyHandler {
 			// WindowEvent handler on the provided stage
 			return;
 		}
+		
+		removeExistingHandler(stage);
 
-		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> {
+		EventHandler<WindowEvent> eventHandler = e -> {
 			try {
 				e.consume();
 				stage.hide();
@@ -42,7 +49,18 @@ public class ShutdownPolicyHandler {
 				System.err.println("Could not stop the stage user's bundle.");
 				e1.printStackTrace();
 			}
-		});
+		};
+		
+		eventHandlers.put(stage, eventHandler);
+		
+		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, eventHandler);
+	}
+
+	private static void removeExistingHandler(Stage stage) {
+		EventHandler<WindowEvent> oldHandler = eventHandlers.remove(stage);
+		if(oldHandler != null) {
+			stage.removeEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, oldHandler);
+		}
 	}
 
 	/**
@@ -57,9 +75,9 @@ public class ShutdownPolicyHandler {
 	 *             if OSGi is not on the classpath
 	 */
 
-	public static void shutdownOnStageExit(StageConsumer stageUser, Stage stage) throws ClassNotFoundException {
+	public static void shutdownOnStageExit(Class<?> bundleClass, Stage stage) {
 
-		Bundle bundle = FrameworkUtil.getBundle(stageUser.getClass());
+		Bundle bundle = FrameworkUtil.getBundle(bundleClass);
 
 		if (bundle == null) {
 			// uh oh, looks like we are not in an OSGi environment
@@ -70,8 +88,10 @@ public class ShutdownPolicyHandler {
 
 		BundleContext bundleContext = bundle.getBundleContext();
 		Bundle systemBundle = bundleContext.getBundle(0);
+		
+		removeExistingHandler(stage);
 
-		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> {
+		EventHandler<WindowEvent> eventHandler = e -> {
 			try {
 				e.consume();
 				stage.hide();
@@ -80,6 +100,14 @@ public class ShutdownPolicyHandler {
 				System.err.println("Could not stop the system bundle.");
 				e1.printStackTrace();
 			}
-		});
+		};
+		
+		eventHandlers.put(stage, eventHandler);
+		
+		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, eventHandler);
+	}
+
+	public static void doNothingOnStageExit(Class<?> bundleClass, Stage stage) {
+		removeExistingHandler(stage);
 	}
 }

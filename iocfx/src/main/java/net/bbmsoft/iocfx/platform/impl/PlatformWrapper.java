@@ -5,6 +5,9 @@ import java.util.concurrent.CountDownLatch;
 import javafx.application.ConditionalFeature;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.stage.Stage;
+import net.bbmsoft.iocfx.ExitPolicy;
+import net.bbmsoft.iocfx.impl.ShutdownPolicyHandler;
 
 public class PlatformWrapper implements net.bbmsoft.iocfx.platform.Platform {
 
@@ -68,7 +71,7 @@ public class PlatformWrapper implements net.bbmsoft.iocfx.platform.Platform {
 
 		latch.await();
 	}
-	
+
 	@Override
 	public void runOnFxApplicationThread(Runnable runnable) {
 
@@ -88,5 +91,24 @@ public class PlatformWrapper implements net.bbmsoft.iocfx.platform.Platform {
 			throw new IllegalStateException(
 					"Not on FX Application Thread. Current thread is " + Thread.currentThread().getName());
 		}
+	}
+
+	@Override
+	public void setExitPolicy(Stage stage, ExitPolicy policy, Class<?> bundleClass) {
+
+		switch (policy) {
+		case DO_NOTHING_ON_STAGE_EXIT:
+			ShutdownPolicyHandler.doNothingOnStageExit(bundleClass, stage);
+			break;
+		case SHUTDOWN_ON_STAGE_EXIT:
+			ShutdownPolicyHandler.shutdownOnStageExit(bundleClass, stage);
+			break;
+		case STOP_BUNDLE_ON_STAGE_EXIT:
+			ShutdownPolicyHandler.stopBundleOnStageExit(bundleClass, stage);
+			break;
+		default:
+			throw new IllegalStateException("Unknown exit policy: " + policy);
+		}
+
 	}
 }

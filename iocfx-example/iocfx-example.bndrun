@@ -20,7 +20,8 @@
 	javafx.scene.control,\
 	javafx.scene.layout,\
 	javafx.scene.text
+	
 -runbundles: \
 	org.apache.felix.scr;version='[2.0.14,2.0.15)',\
-	iocfx;version='[1.1.0,1.1.1)',\
-	iocfx-example;version='[1.1.0,1.1.1)'
+	iocfx;version='[2.0.0,2.0.1)',\
+	iocfx-example;version='[2.0.0,2.0.1)'
