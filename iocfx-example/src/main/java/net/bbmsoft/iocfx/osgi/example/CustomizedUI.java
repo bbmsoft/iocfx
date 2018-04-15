@@ -11,10 +11,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.layout.Region;
-import javafx.stage.Stage;
 import net.bbmsoft.iocfx.ExitPolicy;
+import net.bbmsoft.iocfx.Stage;
 import net.bbmsoft.iocfx.fxml.Fxml;
-import net.bbmsoft.iocfx.platform.Platform;
 
 @Component
 public class CustomizedUI implements Fxml, Initializable {
@@ -24,13 +23,10 @@ public class CustomizedUI implements Fxml, Initializable {
 	
 	@Reference(scope = ReferenceScope.PROTOTYPE_REQUIRED)
 	private Stage stage;
-	
-	@Reference
-	private Platform platform;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		this.platform.setExitPolicy(stage, ExitPolicy.DO_NOTHING_ON_STAGE_EXIT, getClass());
+		this.stage.initExitPolicy(ExitPolicy.DO_NOTHING_ON_STAGE_EXIT, getClass());
 		this.stage.setScene(new Scene(this.root));
 		this.stage.show();
 	}

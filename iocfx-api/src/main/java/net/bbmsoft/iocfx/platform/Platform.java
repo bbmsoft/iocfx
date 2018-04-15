@@ -3,8 +3,6 @@ package net.bbmsoft.iocfx.platform;
 import javafx.application.Application;
 import javafx.application.ConditionalFeature;
 import javafx.beans.property.ReadOnlyBooleanProperty;
-import javafx.stage.Stage;
-import net.bbmsoft.iocfx.ExitPolicy;
 
 /**
  * Wraps the functionality of {@link javafx.application.Platform} into an OSGi
@@ -152,6 +150,4 @@ public interface Platform {
 	 *            window is closed.
 	 */
 	public void setImplicitExit(boolean implicitExit);
-
-	public void setExitPolicy(Stage stage, ExitPolicy policy, Class<?> bundleClass);
 }

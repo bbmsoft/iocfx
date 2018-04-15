@@ -11,6 +11,7 @@
 	
 -runsystempackages: \
 	javafx.application,\
+	javafx.collections,\
 	javafx.beans.property,\
 	javafx.event,\
 	javafx.fxml,\
@@ -18,6 +19,8 @@
 	javafx.stage,\
 	javafx.scene,\
 	javafx.scene.control,\
+	javafx.scene.image,\
+	javafx.scene.input,\
 	javafx.scene.layout,\
 	javafx.scene.text
 	

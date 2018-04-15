@@ -2,6 +2,7 @@ package net.bbmsoft.iocfx.impl;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -28,6 +29,8 @@ public class ShutdownPolicyHandler {
 	 *            the stage
 	 */
 	public static synchronized void stopBundleOnStageExit(Class<?> bundleClass, Stage stage) {
+		
+		Objects.requireNonNull(bundleClass, "Cannot init exit policy STOP_BUNDLE_ON_STAGE_EXIT without a class from the bundle to be stopped!");
 
 		Bundle bundle = FrameworkUtil.getBundle(bundleClass);
 

@@ -5,9 +5,6 @@ import java.util.concurrent.CountDownLatch;
 import javafx.application.ConditionalFeature;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyBooleanProperty;
-import javafx.stage.Stage;
-import net.bbmsoft.iocfx.ExitPolicy;
-import net.bbmsoft.iocfx.impl.ShutdownPolicyHandler;
 
 public class PlatformWrapper implements net.bbmsoft.iocfx.platform.Platform {
 
@@ -93,22 +90,4 @@ public class PlatformWrapper implements net.bbmsoft.iocfx.platform.Platform {
 		}
 	}
 
-	@Override
-	public void setExitPolicy(Stage stage, ExitPolicy policy, Class<?> bundleClass) {
-
-		switch (policy) {
-		case DO_NOTHING_ON_STAGE_EXIT:
-			ShutdownPolicyHandler.doNothingOnStageExit(stage);
-			break;
-		case SHUTDOWN_ON_STAGE_EXIT:
-			ShutdownPolicyHandler.shutdownOnStageExit(stage);
-			break;
-		case STOP_BUNDLE_ON_STAGE_EXIT:
-			ShutdownPolicyHandler.stopBundleOnStageExit(bundleClass, stage);
-			break;
-		default:
-			throw new IllegalStateException("Unknown exit policy: " + policy);
-		}
-
-	}
 }
