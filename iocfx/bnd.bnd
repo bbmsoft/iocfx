@@ -6,3 +6,6 @@ Export-Package: \
 	net.bbmsoft.iocfx,\
 	net.bbmsoft.iocfx.fxml,\
 	net.bbmsoft.iocfx.platform
+Import-Package: \
+	org.slf4j;resolution:=optional,\
+	*

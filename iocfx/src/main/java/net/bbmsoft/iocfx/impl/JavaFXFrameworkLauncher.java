@@ -3,10 +3,12 @@ package net.bbmsoft.iocfx.impl;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
 
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
+import net.bbmsoft.iocfx.fxml.log.impl.MinLogger;
 
 @Component
 public class JavaFXFrameworkLauncher {
@@ -15,6 +17,9 @@ public class JavaFXFrameworkLauncher {
 
 	private RootApplication rootApplication;
 	private Thread frameworkLauncherThread;
+	
+	@Reference
+	private MinLogger log;
 
 	@Activate
 	public synchronized void launch() {
@@ -25,7 +30,7 @@ public class JavaFXFrameworkLauncher {
 
 		JavaFXFrameworkLauncher.frameworkLauncher = this;
 
-		System.out.println("Initializing JavaFX Platform...");
+		log.info("Initializing JavaFX Platform...");
 
 		this.frameworkLauncherThread = new Thread(this::launchFramework);
 		this.frameworkLauncherThread.setName("JavaFX Platform Launcher Thread");
@@ -40,7 +45,7 @@ public class JavaFXFrameworkLauncher {
 		boolean shutdownPlatform = false;
 		
 		if(shutdownPlatform) {
-			System.out.println("Shutting down JavaFX Platform...");
+			log.info("Shutting down JavaFX Platform...");
 			Platform.exit();
 		}
 	}
@@ -78,8 +83,16 @@ public class JavaFXFrameworkLauncher {
 
 		this.rootApplication = rootApplication;
 
-		System.out.println("JavaFX Platform successfully initialized.");
+		log.info("JavaFX Platform successfully initialized.");
 
+	}
+
+	public void logInfo(String string) {
+		log.info(string);
+	}
+	
+	public void logError(String string) {
+		log.error(string);
 	}
 
 }

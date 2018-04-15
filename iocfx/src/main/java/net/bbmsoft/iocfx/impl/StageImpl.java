@@ -16,6 +16,9 @@ public class StageImpl extends javafx.stage.Stage implements Stage {
 	@Reference
 	private Platform platform;
 	
+	@Reference
+	private ShutdownPolicyHandler policyHandler;
+	
 	@Activate
 	public void activate() {
 		this.initExitPolicy(ExitPolicy.SHUTDOWN_ON_STAGE_EXIT, null);
@@ -26,13 +29,13 @@ public class StageImpl extends javafx.stage.Stage implements Stage {
 
 		switch (policy) {
 		case DO_NOTHING_ON_STAGE_EXIT:
-			ShutdownPolicyHandler.doNothingOnStageExit(this);
+			this.policyHandler.doNothingOnStageExit(this);
 			break;
 		case SHUTDOWN_ON_STAGE_EXIT:
-			ShutdownPolicyHandler.shutdownOnStageExit(this);
+			this.policyHandler.shutdownOnStageExit(this);
 			break;
 		case STOP_BUNDLE_ON_STAGE_EXIT:
-			ShutdownPolicyHandler.stopBundleOnStageExit(bundleClass, this);
+			this.policyHandler.stopBundleOnStageExit(bundleClass, this);
 			break;
 		default:
 			throw new IllegalStateException("Unknown exit policy: " + policy);

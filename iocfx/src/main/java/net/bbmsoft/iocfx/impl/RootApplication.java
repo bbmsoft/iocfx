@@ -19,7 +19,7 @@ public class RootApplication extends Application {
 			registerPlatformService();
 		} catch (ClassNotFoundException | NoClassDefFoundError e) {
 			// this will naturally happen in non-OSGi environments
-			System.err.println("Not in an OSGi environment, cannot register Platform service.");
+			JavaFXFrameworkLauncher.frameworkLauncher.logError("Not in an OSGi environment, cannot register Platform service.");
 		}
 	}
 
@@ -35,6 +35,6 @@ public class RootApplication extends Application {
 
 	@Override
 	public synchronized void stop() throws Exception {
-		System.out.println("JavaFX Platform successfully shut down.");
+		JavaFXFrameworkLauncher.frameworkLauncher.logInfo("JavaFX Platform successfully shut down.");
 	}
 }

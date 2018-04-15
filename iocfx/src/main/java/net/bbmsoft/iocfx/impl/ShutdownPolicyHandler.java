@@ -8,14 +8,21 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
 import org.osgi.framework.FrameworkUtil;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 import javafx.event.EventHandler;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import net.bbmsoft.iocfx.fxml.log.impl.MinLogger;
 
+@Component(service = ShutdownPolicyHandler.class)
 public class ShutdownPolicyHandler {
+	
+	@Reference
+	private MinLogger log;
 
-	private static final Map<Stage, EventHandler<WindowEvent>> eventHandlers = new HashMap<>();
+	private final Map<Stage, EventHandler<WindowEvent>> eventHandlers = new HashMap<>();
 
 	/**
 	 * Adds an event handler to the stage that will stop the bundle the stage was
@@ -28,7 +35,7 @@ public class ShutdownPolicyHandler {
 	 * @param stage
 	 *            the stage
 	 */
-	public static synchronized void stopBundleOnStageExit(Class<?> bundleClass, Stage stage) {
+	public synchronized void stopBundleOnStageExit(Class<?> bundleClass, Stage stage) {
 		
 		Objects.requireNonNull(bundleClass, "Cannot init exit policy STOP_BUNDLE_ON_STAGE_EXIT without a class from the bundle to be stopped!");
 
@@ -49,7 +56,7 @@ public class ShutdownPolicyHandler {
 				stage.hide();
 				bundle.stop();
 			} catch (BundleException e1) {
-				System.err.println("Could not stop the stage user's bundle.");
+				log.error("Could not stop the stage user's bundle.");
 				e1.printStackTrace();
 			}
 		};
@@ -59,7 +66,7 @@ public class ShutdownPolicyHandler {
 		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, eventHandler);
 	}
 
-	private static void removeExistingHandler(Stage stage) {
+	private void removeExistingHandler(Stage stage) {
 		EventHandler<WindowEvent> oldHandler = eventHandlers.remove(stage);
 		if (oldHandler != null) {
 			stage.removeEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, oldHandler);
@@ -74,7 +81,7 @@ public class ShutdownPolicyHandler {
 	 * @param stage
 	 *            the stage
 	 */
-	public static void shutdownOnStageExit(Stage stage) {
+	public void shutdownOnStageExit(Stage stage) {
 
 		Bundle bundle = FrameworkUtil.getBundle(ShutdownPolicyHandler.class);
 
@@ -96,7 +103,7 @@ public class ShutdownPolicyHandler {
 				stage.hide();
 				systemBundle.stop();
 			} catch (BundleException e1) {
-				System.err.println("Could not stop the system bundle.");
+				log.error("Could not stop the system bundle.");
 				e1.printStackTrace();
 			}
 		};
@@ -112,7 +119,7 @@ public class ShutdownPolicyHandler {
 	 * @param stage
 	 *            the stage
 	 */
-	public static void doNothingOnStageExit(Stage stage) {
+	public void doNothingOnStageExit(Stage stage) {
 		removeExistingHandler(stage);
 	}
 }

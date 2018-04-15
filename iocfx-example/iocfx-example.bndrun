@@ -6,7 +6,8 @@
 -runrequires: \
 	osgi.identity;filter:='(osgi.identity=org.apache.felix.scr)',\
 	osgi.identity;filter:='(osgi.identity=iocfx)',\
-	osgi.identity;filter:='(osgi.identity=iocfx-example)'
+	osgi.identity;filter:='(osgi.identity=iocfx-example)',\
+	osgi.identity;filter:='(osgi.identity=ch.qos.logback.classic)'
 	
 	
 -runsystempackages: \
@@ -27,4 +28,7 @@
 -runbundles: \
 	org.apache.felix.scr;version='[2.0.14,2.0.15)',\
 	iocfx;version='[2.0.0,2.0.1)',\
-	iocfx-example;version='[2.0.0,2.0.1)'
+	iocfx-example;version='[2.0.0,2.0.1)',\
+	ch.qos.logback.classic;version='[1.2.3,1.2.4)',\
+	ch.qos.logback.core;version='[1.2.3,1.2.4)',\
+	slf4j.api;version='[1.7.25,1.7.26)'
