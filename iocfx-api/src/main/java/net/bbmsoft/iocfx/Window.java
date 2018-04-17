@@ -182,6 +182,8 @@ public interface Window {
 	 */
 	public Object getUserData();
 
+	public void setScene(Scene scene);
+	
 	public Scene getScene();
 
     /**
