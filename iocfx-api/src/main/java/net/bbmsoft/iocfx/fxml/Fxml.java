@@ -3,6 +3,8 @@ package net.bbmsoft.iocfx.fxml;
 import java.io.IOException;
 import java.net.URL;
 
+import javafx.fxml.FXMLLoader;
+
 /**
  * Service interface for components that need an FXML file to be loaded. Any
  * component implementing this interface will be discovered by IoCFX and the
@@ -11,6 +13,21 @@ import java.net.URL;
  * <p>
  * If the {@code Fxml} instance also implements the {@link Root} interface, it
  * will also be set as the root of the FXML object.
+ * <p>
+ * If a component needs to have direct control over the {@link FXMLLoader}
+ * instance, it might not be a good idea to implement this interface. Instead
+ * declare a dependency on an {@link FXMLLoader} prototype service like this:
+ * 
+ * <pre>
+ * &#64;Reference(scope=ReferenceScope.PROTOTYPE_REQUIRED)
+ * private FXMLLoader loader;
+ * </pre>
+ * 
+ * IoCFX will provide the component with its own instance of an
+ * {@code FXMLLoader} that is able to access classes used in the FXML via OSGi
+ * compatible bundle imports, thus avoiding {@link ClassNotFoundException
+ * ClassNotFoundExceptions} which are otherwise a common problem when using an
+ * off-the-shelf {@code FXMLLoader} in an OSGi environment.
  * 
  * @author Michael Bachmann
  *

@@ -4,7 +4,7 @@
 
 ## What is it?
 
-IoCFX is a minimal Inversion of Control framework designed to improve the usability of JavaFX when running it from within OSGi or a similar framework/container/plugin host.
+IoCFX is a minimal Inversion of Control framework designed to improve the usability of JavaFX when running it from within OSGi.
 
 ## Why is it?
 
@@ -16,9 +16,7 @@ IoCFX goes the other way round. It leaves managing the JavaFX Platform to the fr
 
 ## Why use it?
 
-IoCFX was designed with maximum simplicity in mind. If you already have an OSGi framework running and want it to have a UI, let your UI bundle provide a StageConsumer instance and make sure that the net.bbmsoft.iocfx bundle is installed. Voilà, your UI bundle will be provided with a Stage instance as soon as it gets activated. By letting your StageConsumer also implement the StageConfig interface, you can customize the StageStyle and the behavior of your bundle when the stage is closed. That's it.
-
-If you don't have an OSGi framework running, your UI plugin can register itself to a StageConsumerRegistry singleton, which will have the same result. This of course creates an additional compile time dependency that you can avoid when working with OSGi.
+IoCFX was designed with maximum simplicity in mind. If you already have an OSGi framework running and want it to have a UI, let your UI component declare a dependency on javafx.stage.Stage and make sure that the net.bbmsoft.iocfx bundle is installed. Voilà, your UI bundle will be provided with a Stage instance as soon as it gets activated.
 
 ## Why not use it?
 
@@ -45,14 +43,13 @@ This obviously requires maven.
 
 ## How to run?
 
-IoCFX is not executable by itself. However the repository includes two small executable examples.
+IoCFX is not executable by itself. However the repository includes a small executable example.
 
-To run them, follow these simple steps:
+To run it, follow these simple steps:
 
- - make sure you have eclipse with Bndtools 3.4.0+ installed
+ - make sure you have eclipse with Bndtools 3.5.0+ installed
  - follow the 'How to build?' instructions
  - import iocfx-example into eclipse as a maven project
  - open iocfx-example.bndrun and click 'Run OSGi'
- - alternatively, if you want to try the non-OSGi version, find NonOsgiUI.java in the package explorer and run it as a plain old Java Application (Right click > Run As > Java Application)
 
-If you see two windows saying "Hello IoCFX!" popping up (one in case of NonOsgiUI.java), everything went well.
+If you see two windows saying "Hello IoCFX!" popping up, everything went well.
