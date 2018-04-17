@@ -118,12 +118,6 @@ public interface Window {
 	public ReadOnlyDoubleProperty heightProperty();
 
 	/**
-	 * @treatAsPrivate
-	 * @deprecated
-	 */
-	public void setFocused(boolean value);
-
-	/**
 	 * Requests that this {@code Window} get the input focus.
 	 */
 	public void requestFocus();
