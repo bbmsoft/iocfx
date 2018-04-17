@@ -6,12 +6,14 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCombination;
 import javafx.stage.Modality;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
+import javafx.stage.WindowEvent;
 
 public interface Stage {
 
@@ -114,4 +116,8 @@ public interface Stage {
 	public void setScene(Scene scene);
 
 	public void show();
+
+	public ReadOnlyBooleanProperty focusedProperty();
+
+	public void setOnCloseRequest(EventHandler<WindowEvent> object);
 }
