@@ -23,6 +23,20 @@ IoCFX was designed with maximum simplicity in mind. If you already have an OSGi 
 IoCFX is designed to be extremely simple. There are other projects out there that do quite similar things but offer more configurability or extra functionality. Not doing so is a deliberate choice in IoCFX. The goal here is to not add anything to your dependency tree that you don't actually use.
 However if you do plan to use the additional flexibility other projects offer, they may of course be a better choice for you.
 
+## Which Java versions will it run with?
+
+#### Java 7 and older:
+
+No.
+
+#### Java 8
+
+Yes, with a recent version of JavaFX
+
+#### Java 9
+
+Travis successfully compiles it against Oracle JDK 9, I've never actually tried it though. Feedback is appreciated.
+
 ## How to build?
 
 SSH:
