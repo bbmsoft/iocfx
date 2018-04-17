@@ -1,4 +1,4 @@
-package net.bbmsoft.iocfx.fxml.log.impl;
+package net.bbmsoft.iocfx.log.impl;
 
 public interface MinLogger {
 

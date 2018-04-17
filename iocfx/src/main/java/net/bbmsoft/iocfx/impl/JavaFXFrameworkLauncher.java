@@ -8,7 +8,7 @@ import org.osgi.service.component.annotations.Reference;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
-import net.bbmsoft.iocfx.fxml.log.impl.MinLogger;
+import net.bbmsoft.iocfx.log.impl.MinLogger;
 
 @Component
 public class JavaFXFrameworkLauncher {

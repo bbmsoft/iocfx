@@ -1,4 +1,4 @@
-package net.bbmsoft.iocfx.fxml.log.impl;
+package net.bbmsoft.iocfx.log.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

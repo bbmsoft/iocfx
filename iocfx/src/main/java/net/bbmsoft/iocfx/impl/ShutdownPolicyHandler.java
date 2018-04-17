@@ -14,7 +14,7 @@ import org.osgi.service.component.annotations.Reference;
 import javafx.event.EventHandler;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import net.bbmsoft.iocfx.fxml.log.impl.MinLogger;
+import net.bbmsoft.iocfx.log.impl.MinLogger;
 
 @Component(service = ShutdownPolicyHandler.class)
 public class ShutdownPolicyHandler {
