@@ -1,98 +1,66 @@
 package net.bbmsoft.iocfx.impl;
 
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 import net.bbmsoft.iocfx.log.impl.MinLogger;
+import net.bbmsoft.iocfx.platform.impl.PlatformWrapper;
 
+/**
+ * This component will attempt to initialize the JavaFX Platform and register a
+ * {@link net.bbmsoft.iocfx.Platform} as soon as the JavaFX Platform is
+ * guaranteed to be available.
+ * 
+ * @author Michael Bachmann
+ *
+ */
 @Component
 public class JavaFXFrameworkLauncher {
 
-	static JavaFXFrameworkLauncher frameworkLauncher;
-
-	private RootApplication rootApplication;
-	private Thread frameworkLauncherThread;
-	
 	@Reference
 	private MinLogger log;
 
 	@Activate
-	public synchronized void launch() {
-
-		if (JavaFXFrameworkLauncher.frameworkLauncher != null) {
-			throw new IllegalStateException("Framework has already been started! Cannot start a second time.");
-		}
-
-		JavaFXFrameworkLauncher.frameworkLauncher = this;
-
+	public synchronized void activate() {
 		log.info("Initializing JavaFX Platform...");
-
-		this.frameworkLauncherThread = new Thread(this::launchFramework);
-		this.frameworkLauncherThread.setName("JavaFX Platform Launcher Thread");
-		this.frameworkLauncherThread.start();
-	}
-
-	@Deactivate
-	public synchronized void shutdown() {
-		
-		// TODO check config if platform should be shut down
-		
-		boolean shutdownPlatform = false;
-		
-		if(shutdownPlatform) {
-			log.info("Shutting down JavaFX Platform...");
-			Platform.exit();
-		}
+		new Thread(this::launchFramework, "JavaFX Platform Launcher Thread").start();
 	}
 
 	private void launchFramework() {
 		try {
 			Application.launch(RootApplication.class);
 		} catch (IllegalStateException e) {
-			// this may happen if this bundle has been activated, then deactivated and is
-			// then reactivated or if some other bundle has started the JavaFX Platform
-			Platform.runLater(this::fallbackPlatformStart);
+			// this will happen if this bundle has been activated after something else has
+			// already started the JavaFX Platform so we will just register the Platform
+			// service from the JavaFX Application Thread
+			log.error("JavaFX Platform already running.");
+			RootApplication.registerPlatformService();
 		}
 	}
-	
-	private void fallbackPlatformStart() {
-		Stage primaryStage = new Stage();
-		RootApplication rootApplication = new RootApplication();
-		rootApplication.start(primaryStage);
-	}
 
-	synchronized void setRootApplicationInstance(RootApplication rootApplication) {
+	public static class RootApplication extends Application {
 
-		if (!Platform.isFxApplicationThread()) {
-			throw new IllegalStateException(
-					"Not on JavaFX Application thread! Current thread is " + Thread.currentThread().getName());
+		@Override
+		public synchronized void start(Stage primaryStage) {
+			registerPlatformService();
 		}
 
-		if (this.rootApplication != null) {
-			throw new IllegalStateException("Root Application already set!");
+		private static void registerPlatformService() {
+
+			Platform.setImplicitExit(false);
+
+			Bundle bundle = FrameworkUtil.getBundle(JavaFXFrameworkLauncher.class);
+			BundleContext ctx = bundle.getBundleContext();
+
+			ctx.registerService(net.bbmsoft.iocfx.Platform.class, new PlatformWrapper(), null);
 		}
-
-		if (rootApplication == null) {
-			throw new NullPointerException("Cannot set null root application!");
-		}
-
-		this.rootApplication = rootApplication;
-
-		log.info("JavaFX Platform successfully initialized.");
-
-	}
-
-	public void logInfo(String string) {
-		log.info(string);
-	}
-	
-	public void logError(String string) {
-		log.error(string);
 	}
 
 }

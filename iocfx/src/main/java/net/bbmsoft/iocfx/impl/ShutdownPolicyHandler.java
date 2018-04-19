@@ -9,6 +9,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 
 import javafx.event.EventHandler;
@@ -91,7 +92,7 @@ public class ShutdownPolicyHandler {
 	 * @param stage
 	 *            the stage
 	 */
-	public void shutdownOnStageExit(Stage stage) {
+	public synchronized void shutdownOnStageExit(Stage stage) {
 
 		Bundle bundle = FrameworkUtil.getBundle(ShutdownPolicyHandler.class);
 
@@ -129,7 +130,12 @@ public class ShutdownPolicyHandler {
 	 * @param stage
 	 *            the stage
 	 */
-	public void doNothingOnStageExit(Stage stage) {
+	public synchronized void doNothingOnStageExit(Stage stage) {
 		removeExistingHandler(stage);
+	}
+
+	@Deactivate
+	public synchronized void deactivate() {
+		this.eventHandlers.clear();
 	}
 }

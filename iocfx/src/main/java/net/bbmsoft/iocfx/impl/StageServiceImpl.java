@@ -4,6 +4,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
 
@@ -35,6 +36,12 @@ public class StageServiceImpl implements StageService {
 	public void activate() throws InterruptedException {
 		this.platform.runAndWait(this::createStage);
 		this.setExitPolicy(ExitPolicy.SHUTDOWN_ON_STAGE_EXIT);
+	}
+
+	@Deactivate
+	public void deactivate() {
+		this.platform.runOnFxApplicationThread(this.stage.get()::close);
+		this.setExitPolicy(ExitPolicy.DO_NOTHING_ON_STAGE_EXIT);
 	}
 
 	@Override

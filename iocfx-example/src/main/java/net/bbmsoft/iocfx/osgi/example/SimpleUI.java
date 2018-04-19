@@ -23,12 +23,12 @@ public class SimpleUI implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		
+
 		Label label = new Label("Hello IoCFX!\nClose this stage to shut down the application.");
 		label.setTextAlignment(TextAlignment.CENTER);
 		label.setPrefSize(320, 240);
 		label.setAlignment(Pos.CENTER);
-		
+
 		Stage stage = this.stageService.getStage();
 		stage.setScene(new Scene(label));
 		stage.show();
