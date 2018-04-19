@@ -8,31 +8,29 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
 
 import javafx.stage.Stage;
-import net.bbmsoft.iocfx.ExitPolicy;
 import net.bbmsoft.iocfx.Platform;
 import net.bbmsoft.iocfx.StageService;
 
-
 @Component(scope = ServiceScope.PROTOTYPE)
 public class StageServiceImpl implements StageService {
-	
+
 	private final AtomicReference<Stage> stage;
-	
+
 	@Reference
 	private Platform platform;
-	
+
 	@Reference
 	private ShutdownPolicyHandler policyHandler;
-	
+
 	public StageServiceImpl() {
 		this.stage = new AtomicReference<Stage>();
 	}
-	
+
 	@Override
 	public Stage getStage() {
 		return this.stage.get();
 	}
-	
+
 	@Activate
 	public void activate() throws InterruptedException {
 		this.platform.runAndWait(this::createStage);
@@ -40,7 +38,7 @@ public class StageServiceImpl implements StageService {
 	}
 
 	@Override
-	public void setExitPolicy(ExitPolicy policy, Class<?> ... bundleClasses) {
+	public void setExitPolicy(ExitPolicy policy, Class<?>... bundleClasses) {
 
 		switch (policy) {
 		case DO_NOTHING_ON_STAGE_EXIT:
@@ -56,7 +54,7 @@ public class StageServiceImpl implements StageService {
 			throw new IllegalStateException("Unknown exit policy: " + policy);
 		}
 	}
-	
+
 	private void createStage() {
 		this.stage.set(new Stage());
 	}
