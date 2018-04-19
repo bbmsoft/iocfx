@@ -16,9 +16,16 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import net.bbmsoft.iocfx.log.impl.MinLogger;
 
+/**
+ * Adds the listeners to the stage that are required to enforce the specified
+ * exit ploicy.
+ * 
+ * @author Michael Bachmann
+ *
+ */
 @Component(service = ShutdownPolicyHandler.class)
 public class ShutdownPolicyHandler {
-	
+
 	@Reference
 	private MinLogger log;
 
@@ -35,33 +42,36 @@ public class ShutdownPolicyHandler {
 	 * @param stage
 	 *            the stage
 	 */
-	public synchronized void stopBundleOnStageExit(Class<?> bundleClass, Stage stage) {
-		
-		Objects.requireNonNull(bundleClass, "Cannot init exit policy STOP_BUNDLE_ON_STAGE_EXIT without a class from the bundle to be stopped!");
+	public synchronized void stopBundleOnStageExit(Stage stage, Class<?>[] bundleClasses) {
 
-		Bundle bundle = FrameworkUtil.getBundle(bundleClass);
+		Objects.requireNonNull(bundleClasses,
+				"Cannot init exit policy STOP_BUNDLE_ON_STAGE_EXIT without a class from the bundle to be stopped!");
 
-		if (bundle == null) {
-			// uh oh, looks like we are not in an OSGi environment
-			// shutdown policies are not supported here and need to be implemented using a
-			// WindowEvent handler on the provided stage
-			return;
+		Bundle[] bundles = new Bundle[bundleClasses.length];
+		for (int i = 0; i < bundles.length; i++) {
+			bundles[i] = FrameworkUtil.getBundle(bundleClasses[i]);
 		}
 
 		removeExistingHandler(stage);
 
 		EventHandler<WindowEvent> eventHandler = e -> {
-			try {
-				e.consume();
-				stage.hide();
-				bundle.stop();
-			} catch (BundleException e1) {
-				log.error("Could not stop the stage user's bundle.");
-				e1.printStackTrace();
+
+			e.consume();
+			stage.hide();
+
+			for (Bundle b : bundles) {
+				if (b != null) {
+					try {
+						b.stop();
+					} catch (BundleException e1) {
+						log.error("Could not stop the stage user's bundle.");
+						e1.printStackTrace();
+					}
+				}
 			}
 		};
 
-		eventHandlers.put(stage, eventHandler);
+		this.eventHandlers.put(stage, eventHandler);
 
 		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, eventHandler);
 	}

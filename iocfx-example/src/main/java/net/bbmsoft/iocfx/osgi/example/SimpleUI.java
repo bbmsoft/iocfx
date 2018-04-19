@@ -13,21 +13,25 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import net.bbmsoft.iocfx.StageService;
 
 @Component
 public class SimpleUI implements Initializable {
 
 	@Reference(scope = ReferenceScope.PROTOTYPE_REQUIRED)
-	private Stage stage;
+	private StageService stageService;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		
 		Label label = new Label("Hello IoCFX!\nClose this stage to shut down the application.");
 		label.setTextAlignment(TextAlignment.CENTER);
-		label.setPrefSize(640, 480);
+		label.setPrefSize(320, 240);
 		label.setAlignment(Pos.CENTER);
-		this.stage.setScene(new Scene(label));
-		this.stage.show();
+		
+		Stage stage = this.stageService.getStage();
+		stage.setScene(new Scene(label));
+		stage.show();
 	}
 
 }
