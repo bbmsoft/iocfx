@@ -35,7 +35,11 @@ Yes, with a recent version of JavaFX
 
 #### Java 9
 
-Travis successfully compiles it against Oracle JDK 9, I've never actually tried it though. Feedback is appreciated.
+So far I didn't encounter any problems with Oracle JDK 9
+
+#### Java 10
+
+Not tested yet, but I would expect it to work.
 
 ## How to build?
 
