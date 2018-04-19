@@ -11,8 +11,8 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import net.bbmsoft.iocfx.ExitPolicy;
+import net.bbmsoft.iocfx.Fxml;
 import net.bbmsoft.iocfx.StageService;
-import net.bbmsoft.iocfx.fxml.Fxml;
 
 @Component
 public class CustomizedUI implements Fxml {

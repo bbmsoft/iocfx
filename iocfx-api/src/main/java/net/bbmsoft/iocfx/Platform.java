@@ -1,4 +1,4 @@
-package net.bbmsoft.iocfx.platform;
+package net.bbmsoft.iocfx;
 
 import javafx.application.Application;
 import javafx.application.ConditionalFeature;
@@ -8,7 +8,7 @@ import javafx.beans.property.ReadOnlyBooleanProperty;
  * Wraps the functionality of {@link javafx.application.Platform} into an OSGi
  * service. IoCFX will make sure this service does not become available before
  * the JavaFX platform has been launched, so any DS declaring a dependency on
- * {@link net.bbmsoft.iocfx.platform.Platform} will only be activated when it is
+ * {@link net.bbmsoft.iocfx.Platform} will only be activated when it is
  * safe to use the JavaFX Platform.
  * 
  * @author Michael Bachmann

@@ -6,7 +6,7 @@ import javafx.application.ConditionalFeature;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 
-public class PlatformWrapper implements net.bbmsoft.iocfx.platform.Platform {
+public class PlatformWrapper implements net.bbmsoft.iocfx.Platform {
 
 	@Override
 	public ReadOnlyBooleanProperty accessibilityActiveProperty() {

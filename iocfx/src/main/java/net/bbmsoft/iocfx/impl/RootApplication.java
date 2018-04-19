@@ -28,7 +28,7 @@ public class RootApplication extends Application {
 		Bundle bundle = FrameworkUtil.getBundle(this.getClass());
 		// the bundle is null when we are not in an OSGi environment
 		if (bundle != null) {
-			bundle.getBundleContext().registerService(net.bbmsoft.iocfx.platform.Platform.class, new PlatformWrapper(),
+			bundle.getBundleContext().registerService(net.bbmsoft.iocfx.Platform.class, new PlatformWrapper(),
 					null);
 		}
 	}

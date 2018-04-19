@@ -13,8 +13,8 @@ import org.osgi.service.component.annotations.ReferenceScope;
 
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import net.bbmsoft.iocfx.fxml.Fxml;
-import net.bbmsoft.iocfx.platform.Platform;
+import net.bbmsoft.iocfx.Fxml;
+import net.bbmsoft.iocfx.Platform;
 
 @Component
 public class FxmlLoaderComponent {

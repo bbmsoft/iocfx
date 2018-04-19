@@ -9,8 +9,8 @@ import org.osgi.service.component.annotations.ServiceScope;
 
 import javafx.stage.Stage;
 import net.bbmsoft.iocfx.ExitPolicy;
+import net.bbmsoft.iocfx.Platform;
 import net.bbmsoft.iocfx.StageService;
-import net.bbmsoft.iocfx.platform.Platform;
 
 
 @Component(scope = ServiceScope.PROTOTYPE)

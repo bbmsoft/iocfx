@@ -11,7 +11,3 @@ bin: \
 Private-Package: \
 	net.bbmsoft.iocfx.nonosgi.example,\
 	net.bbmsoft.iocfx.osgi.example
-
-Import-Package: \
-	!*.impl.*,\
-	*

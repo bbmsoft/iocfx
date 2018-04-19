@@ -1,4 +1,4 @@
-package net.bbmsoft.iocfx.fxml;
+package net.bbmsoft.iocfx;
 
 import java.io.IOException;
 import java.net.URL;
