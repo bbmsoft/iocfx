@@ -65,9 +65,25 @@ IoCFX is not executable by itself. However the repository includes a small execu
 
 To run it, follow these simple steps:
 
- - make sure you have eclipse with Bndtools 3.5.0+ installed
- - follow the 'How to build?' instructions
- - import iocfx-example into eclipse as a maven project
- - open iocfx-example.bndrun and click 'Run OSGi'
+#### With eclipse:
 
+ - make sure you have the Bndtools Plugin 3.5.0+ installed
+ - import all four projects contained in the repository into your workspace as maven projects
+ - open iocfx-example/iocfx-example.bndrun and click 'Run OSGi'
+
+#### Without eclipse:
+
+I'm using Apache Felix here since that's the OSGi framework I'm most familiar with, but any other framework implementing OSGi  R6 should work as well.
+
+I'm assuming you cloned th IoCFX repo into /tmp. Please adjust this path accordingly!
+
+ - follow the 'How to build?' instructions
+ - download Apache Felix from [the felix website](http://felix.apache.org/downloads.cgi) and start it according to its documentation
+ - type ```install http://central.maven.org/maven2/org/apache/felix/org.apache.felix.scr/2.0.14/org.apache.felix.scr-2.0.14.jar``` and hit enter
+ - start the bundle with the ID the shell just printed out by typing ```start <ID>``` and hitting enter
+ - type ```install file:/tmp/iocfx/target/iocfx-2.0.0-SNAPSHOT.jar```
+ - start the bundle with the ID the shell just printed out by typing ```start <ID>``` and hitting enter
+ - type ```install file:/tmp/iocfx-example/target/iocfx-example-2.0.0-SNAPSHOT.jar```
+ - start the bundle with the ID the shell just printed out by typing ```start <ID>``` and hitting enter
+ 
 If you see two windows saying "Hello IoCFX!" popping up, everything went well.
