@@ -5,18 +5,24 @@ import org.slf4j.LoggerFactory;
 
 public class Slf4jMinLogger implements MinLogger {
 
-	private final Logger log = LoggerFactory.getLogger("IoCFX");
+	private final Logger log;
 	
-	public Slf4jMinLogger() throws NoClassDefFoundError {
+	public Slf4jMinLogger() throws NoClassDefFoundError, ClassNotFoundException {
+		this.log = LoggerFactory.getLogger("IoCFX");
 	}
 
 	@Override
 	public void info(String message) {
-		log.info(message);
+		this.log.info(message);
 	}
 
 	@Override
 	public void error(String message) {
-		log.error(message);
+		this.log.error(message);
+	}
+	
+	@Override
+	public void error(String message, Throwable e) {
+		this.log.error(message, e);
 	}
 }
