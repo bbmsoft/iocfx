@@ -14,6 +14,15 @@ import javafx.fxml.Initializable;
 import net.bbmsoft.iocfx.Fxml;
 import net.bbmsoft.iocfx.Platform;
 
+/**
+ * Tracks and manages {@link Initializable} services. If a component publishes
+ * itself as an {@link Initializable} service, this component will make sure its
+ * initialize method gets called on the JavaFX Application thread as soon as the
+ * JavaFX Platform is available.
+ * 
+ * @author Michael Bachmann
+ *
+ */
 @Component
 public class Initializer {
 

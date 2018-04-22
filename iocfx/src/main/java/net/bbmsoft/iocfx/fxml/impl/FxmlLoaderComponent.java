@@ -18,6 +18,14 @@ import net.bbmsoft.iocfx.Fxml;
 import net.bbmsoft.iocfx.Platform;
 import net.bbmsoft.iocfx.log.impl.MinLogger;
 
+/**
+ * Tracks and manages {@link Fxml} services. If a component publishes itself as
+ * an {@link Fxml} service, this component will make sure its layout gets loaded
+ * on the JavaFX Application thread as soon as the JavaFX Platform is available.
+ * 
+ * @author Michael Bachmann
+ *
+ */
 @Component
 public class FxmlLoaderComponent {
 
@@ -116,7 +124,7 @@ public class FxmlLoaderComponent {
 	}
 
 	private void unregisterLoader(ComponentServiceObjects<FXMLLoader> loaderFactory, FXMLLoader loader) {
-		
+
 		try {
 			loaderFactory.ungetService(loader);
 		} catch (IllegalStateException e) {
