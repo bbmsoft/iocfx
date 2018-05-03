@@ -65,8 +65,8 @@ public interface Fxml {
 
 	/**
 	 * Fxml components implementing the Consumer interface will be passed the loaded
-	 * object on the JavaFX Application thread once the fxml file has been
-	 * successfully loaded.
+	 * object once the fxml file has been successfully loaded. This is guaranteed to
+	 * happen on the on the JavaFX Application Thread.
 	 * 
 	 * @author Michael Bachmann
 	 *
