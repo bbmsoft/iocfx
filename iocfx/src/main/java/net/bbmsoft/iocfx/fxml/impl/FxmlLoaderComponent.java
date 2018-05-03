@@ -3,6 +3,7 @@ package net.bbmsoft.iocfx.fxml.impl;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashSet;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import org.osgi.service.component.ComponentServiceObjects;
@@ -149,6 +150,11 @@ public class FxmlLoaderComponent {
 		}
 		
 		loader.setLocation(location);
+	
+		if(fxml instanceof Fxml.Resources) {
+			ResourceBundle resources = ((Fxml.Resources) fxml).getResources();
+			loader.setResources(resources );
+		}
 	
 		if(fxml instanceof Fxml.Controller) {
 			loader.setController(fxml);

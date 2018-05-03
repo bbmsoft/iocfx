@@ -2,6 +2,7 @@ package net.bbmsoft.iocfx;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ResourceBundle;
 
 import javafx.fxml.FXMLLoader;
 
@@ -19,6 +20,10 @@ import javafx.fxml.FXMLLoader;
  * <p>
  * If the {@code Fxml} instance implements the {@link Consumer} interface, the
  * loaded object will be passed to its {@link Consumer#accept(Object) accept}
+ * method.
+ * <p>
+ * If the {@code Fxml} instance implements the {@link Resources} interface, the
+ * provided {@link ResourceBundle} will be used while loading the FXML file.
  * method.
  * <p>
  * If a component needs to have direct control over the {@link FXMLLoader}
@@ -64,6 +69,24 @@ public interface Fxml {
 	}
 
 	/**
+	 * Fxml components implementing the Resources interface can supply a
+	 * {@link ResourceBundle} that will be used by the FXMLLoader.
+	 * 
+	 * @author Michael Bachmann
+	 *
+	 */
+	public interface Resources extends Fxml {
+
+		/**
+		 * Provide a {@link ResourceBundle} that will be used to resolve resource key
+		 * attribute values in the FXML file.
+		 * 
+		 * @return a {@code ResourceBundle}
+		 */
+		public ResourceBundle getResources();
+	}
+
+	/**
 	 * Fxml components implementing the Consumer interface will be passed the loaded
 	 * object once the fxml file has been successfully loaded. This is guaranteed to
 	 * happen on the on the JavaFX Application Thread.
@@ -75,7 +98,14 @@ public interface Fxml {
 	 */
 	public interface Consumer<T> extends Fxml {
 
-		public void accept(T t);
+		/**
+		 * The root object loaded from the FXML file will be passed to this method on
+		 * the JavaFX Application Thread.
+		 * 
+		 * @param root
+		 *            the root object loaded from the FXML file
+		 */
+		public void accept(T root);
 	}
 
 	/**
