@@ -9,17 +9,24 @@ import javafx.fxml.FXMLLoader;
  * Service interface for components that need an FXML file to be loaded. Any
  * component implementing this interface will be discovered by IoCFX and the
  * FXML file referred to by the return value of {@link #getLocation()} will be
- * loaded with the {@code Fxml} instance as controller.
+ * loaded.
  * <p>
- * If the {@code Fxml} instance also implements the {@link Root} interface, it
- * will also be set as the root of the FXML object.
+ * If the {@code Fxml} instance implements the {@link Root} interface, it will
+ * be set as the root of the FXML object.
+ * <p>
+ * If the {@code Fxml} instance implements the {@link Controller} interface, it
+ * will be set as the controller of the FXML object.
+ * <p>
+ * If the {@code Fxml} instance implements the {@link Consumer} interface, the
+ * loaded object will be passed to its {@link Consumer#accept(Object) accept}
+ * method.
  * <p>
  * If a component needs to have direct control over the {@link FXMLLoader}
  * instance, it might not be a good idea to implement this interface. Instead
  * declare a dependency on an {@link FXMLLoader} prototype service like this:
  * 
  * <pre>
- * &#64;Reference(scope=ReferenceScope.PROTOTYPE_REQUIRED)
+ * &#64;Reference(scope = ReferenceScope.PROTOTYPE_REQUIRED)
  * private FXMLLoader loader;
  * </pre>
  * 
@@ -41,8 +48,34 @@ public interface Fxml {
 	 * @author Michael Bachmann
 	 *
 	 */
-	public interface Root {
+	public interface Root extends Fxml {
 
+	}
+
+	/**
+	 * Marker interface for components that need to be set as the controller of the
+	 * FXML file they want to be loaded.
+	 * 
+	 * @author Michael Bachmann
+	 *
+	 */
+	public interface Controller extends Fxml {
+
+	}
+
+	/**
+	 * Fxml components implementing the Consumer interface will be passed the loaded
+	 * object on the JavaFX Application thread once the fxml file has been
+	 * successfully loaded.
+	 * 
+	 * @author Michael Bachmann
+	 *
+	 * @param <T>
+	 *            type of the FXML's root object
+	 */
+	public interface Consumer<T> extends Fxml {
+
+		public void accept(T t);
 	}
 
 	/**

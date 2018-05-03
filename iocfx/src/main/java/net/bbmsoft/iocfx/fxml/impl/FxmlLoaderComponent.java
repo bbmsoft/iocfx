@@ -1,8 +1,9 @@
 package net.bbmsoft.iocfx.fxml.impl;
 
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.net.URL;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.osgi.service.component.ComponentServiceObjects;
 import org.osgi.service.component.annotations.Activate;
@@ -29,7 +30,7 @@ import net.bbmsoft.iocfx.log.impl.MinLogger;
 @Component
 public class FxmlLoaderComponent {
 
-	private final Queue<Fxml> queue;
+	private final Set<Fxml> fxmls;
 
 	@Reference
 	private Platform platform;
@@ -43,16 +44,15 @@ public class FxmlLoaderComponent {
 	private boolean active;
 
 	public FxmlLoaderComponent() {
-		this.queue = new LinkedList<>();
+		this.fxmls = new HashSet<>();
 	}
 
 	@Activate
 	public synchronized void activate() {
 
 		this.active = true;
-
-		while (!this.queue.isEmpty()) {
-			Fxml fxml = this.queue.remove();
+		
+		for(Fxml fxml : this.fxmls) {
 			loadOnFxThread(fxml);
 		}
 	}
@@ -60,20 +60,55 @@ public class FxmlLoaderComponent {
 	@Deactivate
 	public synchronized void deactivate() {
 		this.active = false;
+		this.fxmls.clear();
 	}
 
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
 	public synchronized void addFxml(Fxml fxml) {
 
-		if (this.active) {
+		if (this.fxmls.add(fxml) && this.active) {
 			loadOnFxThread(fxml);
-		} else {
-			this.queue.add(fxml);
 		}
 	}
 
 	public synchronized void removeFxml(Fxml fxml) {
-		this.queue.remove(fxml);
+		this.fxmls.remove(fxml);
+	}
+	
+	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
+	public synchronized void addFxmlRoot(Fxml.Root fxml) {
+
+		if (this.fxmls.add(fxml) && this.active) {
+			loadOnFxThread(fxml);
+		}
+	}
+
+	public synchronized void removeFxmlRoot(Fxml.Root fxml) {
+		this.fxmls.remove(fxml);
+	}
+	
+	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
+	public synchronized void addFxmlController(Fxml.Controller fxml) {
+
+		if (this.fxmls.add(fxml) && this.active) {
+			loadOnFxThread(fxml);
+		}
+	}
+
+	public synchronized void removeFxmlController(Fxml.Controller fxml) {
+		this.fxmls.remove(fxml);
+	}
+	
+	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
+	public synchronized void addFxmlConsumer(Fxml.Consumer<?> fxml) {
+
+		if (this.fxmls.add(fxml) && this.active) {
+			loadOnFxThread(fxml);
+		}
+	}
+
+	public synchronized void removeFxmlConsumer(Fxml.Consumer<?> fxml) {
+		this.fxmls.remove(fxml);
 	}
 
 	private void loadOnFxThread(Fxml client) {
@@ -102,16 +137,30 @@ public class FxmlLoaderComponent {
 		}
 	}
 
-	private void load(Fxml fxml, FXMLLoader loader) throws IOException {
+	@SuppressWarnings("unchecked")
+	private <T> void load(Fxml fxml, FXMLLoader loader) throws IOException {
 
-		loader.setLocation(fxml.getLocation());
-		loader.setController(fxml);
+		URL location = fxml.getLocation();
+		
+		if(location == null) {
+			log.error("Fxml " + fxml + " didn't provide a valid location!");
+		}
+		loader.setLocation(location);
+	
+		if(fxml instanceof Fxml.Controller) {
+			loader.setController(fxml);
+		}
 
 		if (fxml instanceof Fxml.Root) {
 			loader.setRoot(fxml);
+		}		
+		
+		T object = loader.load();
+		
+		if(fxml instanceof Fxml.Consumer) {
+			((Fxml.Consumer<T>) fxml).accept(object);
 		}
-
-		loader.load();
+		
 	}
 
 	private void handle(Fxml fxml, IOException e, MinLogger log) {
