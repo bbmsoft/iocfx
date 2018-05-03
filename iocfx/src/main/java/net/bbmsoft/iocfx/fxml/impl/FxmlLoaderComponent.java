@@ -142,9 +142,12 @@ public class FxmlLoaderComponent {
 
 		URL location = fxml.getLocation();
 		
-		if(location == null) {
+		if(location != null) {
+			log.info("Loading FXML " + location + " for component " + fxml);
+		} else {
 			log.error("Fxml " + fxml + " didn't provide a valid location!");
 		}
+		
 		loader.setLocation(location);
 	
 		if(fxml instanceof Fxml.Controller) {
