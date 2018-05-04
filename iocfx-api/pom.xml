@@ -13,13 +13,4 @@
 
 	<name>IoCFX API</name>
 
-	<dependencies>
-
-		<dependency>
-			<groupId>org.osgi</groupId>
-			<artifactId>org.osgi.annotation</artifactId>
-		</dependency>
-		
-	</dependencies>
-
 </project>
