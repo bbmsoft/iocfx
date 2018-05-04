@@ -1,85 +1,66 @@
 package net.bbmsoft.iocfx.impl;
 
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.stage.Stage;
+import net.bbmsoft.iocfx.log.impl.MinLogger;
+import net.bbmsoft.iocfx.platform.impl.PlatformWrapper;
 
+/**
+ * This component will attempt to initialize the JavaFX Platform and register a
+ * {@link net.bbmsoft.iocfx.Platform} as soon as the JavaFX Platform is
+ * guaranteed to be available.
+ * 
+ * @author Michael Bachmann
+ *
+ */
 @Component
 public class JavaFXFrameworkLauncher {
-	
-	static JavaFXFrameworkLauncher frameworkLauncher;
-	
-	private RootApplication rootApplication;
-	private Thread frameworkLauncherThread;
-	private StageConsumerRegistry stageUserRegistry;
+
+	@Reference
+	private MinLogger log;
 
 	@Activate
-	public synchronized void launch() {
-		
-		if(JavaFXFrameworkLauncher.frameworkLauncher != null) {
-			throw new IllegalStateException("Framework has already been started! Cannot start a second time.");
-		}
-		
-		JavaFXFrameworkLauncher.frameworkLauncher = this;
+	public synchronized void activate() {
+		log.info("Initializing JavaFX Platform...");
+		new Thread(this::launchFramework, "JavaFX Platform Launcher Thread").start();
+	}
 
-		System.out.println("Initializing JavaFX Platform...");
-		
-		this.frameworkLauncherThread = new Thread(this::launchFramework);
-		this.frameworkLauncherThread.start();
-	}
-	
-	@Deactivate
-	public synchronized void shutdown() {
-		System.out.println("Shutting down JavaFX Platform...");
-		Platform.exit();
-	}
-	
-	@Reference
-	public synchronized void setStageUserRegistry(StageConsumerRegistry stageUserRegistry) {
-		this.stageUserRegistry = stageUserRegistry;
-		notifyStageUserRegistry();
-	}
-	
-	public synchronized void unsetStageUserRegistry(StageConsumerRegistry stageUserRegistry) {
-		if(this.stageUserRegistry == stageUserRegistry) {
-			this.stageUserRegistry = null;
-		}
-	}
-	
 	private void launchFramework() {
-		Application.launch(RootApplication.class);
-	}
-	
-	synchronized void setRootApplicationInstance(RootApplication rootApplication) {
-		
-		if(!Platform.isFxApplicationThread()) {
-			throw new IllegalStateException("Not on JavaFX Application thread! Current thread is " + Thread.currentThread().getName());
+		try {
+			Application.launch(RootApplication.class);
+		} catch (IllegalStateException e) {
+			// this will happen if this bundle has been activated after something else has
+			// already started the JavaFX Platform so we will just register the Platform
+			// service from the JavaFX Application Thread
+			log.error("JavaFX Platform already running.");
+			RootApplication.registerPlatformService();
 		}
-		
-		if(this.rootApplication != null) {
-			throw new IllegalStateException("Root Application already set!");
-		}
-		
-		if(rootApplication == null) {
-			throw new NullPointerException("Cannot set null root application!");
-		}
-		
-		this.rootApplication = rootApplication;
-		
-		System.out.println("JavaFX Platform successfully initialized.");
-		
-		notifyStageUserRegistry();
-		
 	}
 
-	private void notifyStageUserRegistry() {
-		if(this.stageUserRegistry != null && this.rootApplication != null) {
-			this.stageUserRegistry.platformInitialized();
+	public static class RootApplication extends Application {
+
+		@Override
+		public synchronized void start(Stage primaryStage) {
+			registerPlatformService();
+		}
+
+		private static void registerPlatformService() {
+
+			Platform.setImplicitExit(false);
+
+			Bundle bundle = FrameworkUtil.getBundle(JavaFXFrameworkLauncher.class);
+			BundleContext ctx = bundle.getBundleContext();
+
+			ctx.registerService(net.bbmsoft.iocfx.Platform.class, new PlatformWrapper(), null);
 		}
 	}
-	
+
 }

@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.VBox?>
 
 
-<StackPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.152" prefWidth="640" prefHeight="480">
+<StackPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.152" prefWidth="640" prefHeight="480" fx:id="root">
    <children>
       <VBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
          <children>

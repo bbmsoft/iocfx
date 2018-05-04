@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
@@ -6,24 +7,24 @@
 	<parent>
 		<groupId>net.bbmsoft</groupId>
 		<artifactId>iocfx-parent</artifactId>
-		<version>1.0.0</version>
+		<version>2.0.0</version>
 	</parent>
-	
+
 	<artifactId>iocfx</artifactId>
-	
+
 	<name>IoCFX</name>
-	
+
 	<dependencies>
-	
+
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>iocfx-api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.osgi</groupId>
-			<artifactId>org.osgi.core</artifactId>
+			<artifactId>osgi.core</artifactId>
 		</dependency>
 
 		<dependency>
@@ -31,6 +32,12 @@
 			<artifactId>osgi.cmpn</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
 	</dependencies>
-	
+
 </project>

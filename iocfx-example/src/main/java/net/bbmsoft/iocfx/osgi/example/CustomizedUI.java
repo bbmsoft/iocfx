@@ -1,46 +1,35 @@
 package net.bbmsoft.iocfx.osgi.example;
 
-import java.io.IOException;
+import java.net.URL;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceScope;
 
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import net.bbmsoft.iocfx.ExitPolicy;
-import net.bbmsoft.iocfx.StageConfig;
-import net.bbmsoft.iocfx.StageConsumer;
+import net.bbmsoft.iocfx.Fxml;
+import net.bbmsoft.iocfx.StageService;
+import net.bbmsoft.iocfx.StageService.ExitPolicy;
 
 @Component
-public class CustomizedUI implements StageConsumer, StageConfig {
+public class CustomizedUI implements Fxml.Consumer<Region> {
+
+	@Reference(scope = ReferenceScope.PROTOTYPE_REQUIRED)
+	private StageService stageService;
 
 	@Override
-	public void accept(Stage stage) {
-
-		Region root;
-		
-		try {
-			root = new FXMLLoader(this.getClass().getResource("FxmlExample.fxml")).load();
-		} catch (IOException e) {
-			e.printStackTrace();
-			root = new Label("Could not load FXML.");
-		}
-		
+	public void accept(Region root) {
+		this.stageService.setExitPolicy(ExitPolicy.DO_NOTHING_ON_STAGE_EXIT);
+		Stage stage = this.stageService.getStage();
 		stage.setScene(new Scene(root));
-		stage.show();
+		stage.show();	
 	}
 
 	@Override
-	public ExitPolicy getExitPolicy() {
-		return ExitPolicy.DO_NOTHING_ON_STAGE_EXIT;
-	}
-
-	@Override
-	public StageStyle getStageStyle() {
-		return StageStyle.UNIFIED;
+	public URL getLocation() {
+		return this.getClass().getResource("FxmlExample.fxml");
 	}
 
 }

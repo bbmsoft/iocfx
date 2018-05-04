@@ -1,15 +1,13 @@
 -standalone: target/index.xml
 
 src: \
-	src/main/java,\
-	src/main/resources
+	src/main/java
 bin: \
 	target/classes
+
+-includeresource: \
+	src/main/resources
 
 Private-Package: \
 	net.bbmsoft.iocfx.nonosgi.example,\
 	net.bbmsoft.iocfx.osgi.example
-
-Import-Package: \
-	!*.impl.*,\
-	*
