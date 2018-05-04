@@ -37,8 +37,8 @@ public class ShutdownPolicyHandler {
 	 * created for when the stage is closed and removes any existing event handlers
 	 * enforcing a different policy.
 	 * 
-	 * @param bundleClass
-	 *            a class from the bundle that needs to be stopped when the stage is
+	 * @param bundleClasses
+	 *            classes from the bundles that need to be stopped when the stage is
 	 *            closed
 	 * @param stage
 	 *            the stage
