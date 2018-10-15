@@ -16,8 +16,14 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.component.annotations.ReferenceScope;
 
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.Region;
+import javafx.stage.Stage;
 import net.bbmsoft.iocfx.Fxml;
+import net.bbmsoft.iocfx.Fxml.Application;
 import net.bbmsoft.iocfx.Platform;
+import net.bbmsoft.iocfx.StageService;
+import net.bbmsoft.iocfx.StageService.ExitPolicy;
 import net.bbmsoft.iocfx.log.impl.MinLogger;
 
 /**
@@ -42,6 +48,9 @@ public class FxmlLoaderComponent {
 	@Reference(scope = ReferenceScope.PROTOTYPE_REQUIRED)
 	private ComponentServiceObjects<FXMLLoader> loaderFactory;
 
+	@Reference(scope = ReferenceScope.PROTOTYPE_REQUIRED)
+	private ComponentServiceObjects<StageService> stageService;
+
 	private boolean active;
 
 	public FxmlLoaderComponent() {
@@ -52,8 +61,8 @@ public class FxmlLoaderComponent {
 	public synchronized void activate() {
 
 		this.active = true;
-		
-		for(Fxml fxml : this.fxmls) {
+
+		for (Fxml fxml : this.fxmls) {
 			loadOnFxThread(fxml);
 		}
 	}
@@ -75,7 +84,7 @@ public class FxmlLoaderComponent {
 	public synchronized void removeFxml(Fxml fxml) {
 		this.fxmls.remove(fxml);
 	}
-	
+
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
 	public synchronized void addFxmlRoot(Fxml.Root fxml) {
 
@@ -87,7 +96,7 @@ public class FxmlLoaderComponent {
 	public synchronized void removeFxmlRoot(Fxml.Root fxml) {
 		this.fxmls.remove(fxml);
 	}
-	
+
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
 	public synchronized void addFxmlController(Fxml.Controller fxml) {
 
@@ -99,7 +108,7 @@ public class FxmlLoaderComponent {
 	public synchronized void removeFxmlController(Fxml.Controller fxml) {
 		this.fxmls.remove(fxml);
 	}
-	
+
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
 	public synchronized void addFxmlConsumer(Fxml.Consumer<?> fxml) {
 
@@ -109,6 +118,30 @@ public class FxmlLoaderComponent {
 	}
 
 	public synchronized void removeFxmlConsumer(Fxml.Consumer<?> fxml) {
+		this.fxmls.remove(fxml);
+	}
+
+	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
+	public synchronized void addFxmlApplication(Fxml.Application fxml) {
+
+		if (this.fxmls.add(fxml) && this.active) {
+			loadOnFxThread(fxml);
+		}
+	}
+
+	public synchronized void removeFxmlApplication(Fxml.Application fxml) {
+		this.fxmls.remove(fxml);
+	}
+
+	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
+	public synchronized void addFxmlResources(Fxml.Resources fxml) {
+
+		if (this.fxmls.add(fxml) && this.active) {
+			loadOnFxThread(fxml);
+		}
+	}
+
+	public synchronized void removeFxmlResources(Fxml.Resources fxml) {
 		this.fxmls.remove(fxml);
 	}
 
@@ -142,34 +175,53 @@ public class FxmlLoaderComponent {
 	private <T> void load(Fxml fxml, FXMLLoader loader) throws IOException {
 
 		URL location = fxml.getLocation();
-		
-		if(location != null) {
+
+		if (location != null) {
 			log.info("Loading FXML " + location + " for component " + fxml);
 		} else {
 			log.error("Fxml " + fxml + " didn't provide a valid location!");
 		}
-		
+
 		loader.setLocation(location);
-	
-		if(fxml instanceof Fxml.Resources) {
+
+		if (fxml instanceof Fxml.Resources) {
 			ResourceBundle resources = ((Fxml.Resources) fxml).getResources();
-			loader.setResources(resources );
+			loader.setResources(resources);
 		}
-	
-		if(fxml instanceof Fxml.Controller) {
+
+		if (fxml instanceof Fxml.Controller) {
 			loader.setController(fxml);
 		}
 
 		if (fxml instanceof Fxml.Root) {
 			loader.setRoot(fxml);
-		}		
-		
+		}
+
 		T object = loader.load();
-		
-		if(fxml instanceof Fxml.Consumer) {
+
+		if (fxml instanceof Fxml.Consumer) {
 			((Fxml.Consumer<T>) fxml).accept(object);
 		}
-		
+
+		if (fxml instanceof Application) {
+			if (object instanceof Region) {
+
+				StageService stageService = this.stageService.getService();
+				Stage stage = stageService.getStage();
+
+				ExitPolicy exitPolicy = ((Application) fxml).getExitPolicy();
+				exitPolicy = exitPolicy != null ? exitPolicy : ExitPolicy.SHUTDOWN_ON_STAGE_EXIT;
+				stageService.setExitPolicy(exitPolicy, fxml.getClass());
+				stage.setScene(new Scene((Region) object));
+				((Application) fxml).prepareStage(stage);
+				stage.show();
+
+			} else {
+				throw new IllegalStateException("An application root must be an instance of " + Region.class
+						+ " but was a " + object.getClass());
+			}
+		}
+
 	}
 
 	private void handle(Fxml fxml, IOException e, MinLogger log) {

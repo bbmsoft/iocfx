@@ -18,6 +18,9 @@ import javafx.stage.Stage;
  */
 public interface StageService {
 	
+	public static final String EXIT_POLICY = ExitPolicy.class.getSimpleName();
+	public static final String DO_NOTHING_ON_STAGE_EXIT = ExitPolicy.DO_NOTHING_ON_STAGE_EXIT.toString();
+	
 	/**
 	 * Enum to determine the behavior of an application when a Stage is closed.
 	 * 

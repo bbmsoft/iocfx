@@ -13,7 +13,7 @@ import net.bbmsoft.iocfx.Fxml;
 import net.bbmsoft.iocfx.StageService;
 import net.bbmsoft.iocfx.StageService.ExitPolicy;
 
-@Component
+@Component(enabled = false)
 public class CustomizedUI implements Fxml.Consumer<Region> {
 
 	@Reference(scope = ReferenceScope.PROTOTYPE_REQUIRED)
@@ -26,7 +26,7 @@ public class CustomizedUI implements Fxml.Consumer<Region> {
 		stage.setScene(new Scene(root));
 		stage.show();	
 	}
-
+	
 	@Override
 	public URL getLocation() {
 		return this.getClass().getResource("FxmlExample.fxml");

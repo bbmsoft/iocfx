@@ -5,6 +5,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import javafx.fxml.FXMLLoader;
+import javafx.stage.Stage;
+import net.bbmsoft.iocfx.StageService.ExitPolicy;
 
 /**
  * Service interface for components that need an FXML file to be loaded. Any
@@ -109,6 +111,25 @@ public interface Fxml {
 	}
 
 	/**
+	 * Marker interface for components that represent an application main window. If
+	 * this interface is implemented, the FXML's root will automatically be put into
+	 * a stage and shown once loaded.
+	 * 
+	 * @author Michael Bachmann
+	 *
+	 */
+	public interface Application extends Fxml {
+
+		public default ExitPolicy getExitPolicy() {
+			return ExitPolicy.SHUTDOWN_ON_STAGE_EXIT;
+		}
+		
+		public default void prepareStage(Stage primaryStage) {
+			
+		}
+	}
+
+	/**
 	 * If an {@code Fxml} instance implements this interface, any {@link IOException
 	 * IOExceptions} that happen while loading the FXML file will be caught and
 	 * propagated to the {@link #onError(IOException)} method.
@@ -134,5 +155,7 @@ public interface Fxml {
 	 * 
 	 * @return the FXML file resource to be loaded
 	 */
-	public URL getLocation();
+	public default URL getLocation() {
+		return this.getClass().getResource(this.getClass().getSimpleName() + ".fxml");
+	}
 }

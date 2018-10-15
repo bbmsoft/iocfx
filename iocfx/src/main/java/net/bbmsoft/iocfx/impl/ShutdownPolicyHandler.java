@@ -13,6 +13,7 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import net.bbmsoft.iocfx.log.impl.MinLogger;
@@ -26,6 +27,8 @@ import net.bbmsoft.iocfx.log.impl.MinLogger;
  */
 @Component(service = ShutdownPolicyHandler.class)
 public class ShutdownPolicyHandler {
+
+	private static final EventType<WindowEvent> EXIT_POLICY_TRIGGER_EVENT = WindowEvent.WINDOW_HIDING;
 
 	@Reference
 	private MinLogger log;
@@ -74,13 +77,13 @@ public class ShutdownPolicyHandler {
 
 		this.eventHandlers.put(stage, eventHandler);
 
-		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, eventHandler);
+		stage.addEventHandler(EXIT_POLICY_TRIGGER_EVENT, eventHandler);
 	}
 
 	private void removeExistingHandler(Stage stage) {
 		EventHandler<WindowEvent> oldHandler = eventHandlers.remove(stage);
 		if (oldHandler != null) {
-			stage.removeEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, oldHandler);
+			stage.removeEventHandler(EXIT_POLICY_TRIGGER_EVENT, oldHandler);
 		}
 	}
 
@@ -121,7 +124,7 @@ public class ShutdownPolicyHandler {
 
 		eventHandlers.put(stage, eventHandler);
 
-		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, eventHandler);
+		stage.addEventHandler(EXIT_POLICY_TRIGGER_EVENT, eventHandler);
 	}
 
 	/**
